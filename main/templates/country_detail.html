@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+
+
+{% block body %}
+
+<h1>Country List</h1>
+<p>{{country.name}}</p>
+<p>{{country.population}}</p>
+<p>{{country.capital}}</p>
+
+{% if country.flag %}
+	<p> <img src='{{country.flag.url}}'> </p>
+{% endif %}
+
+<br><br>
+
+{% for review in country.review_set.all %}
+
+	<h2>{{review.title}}</h2>
+
+	{% if request.user == review.user %}
+	<a href="/editreview/{{review.pk}}"><p>EDIT</p></a>
+	<a href="/deletereview/{{review.pk}}"><p>DELETE</p></a>
+	{% endif %}
+	<p>content : {{review.content}}</p>
+	<p>review by : {{review.user}}</p>
+
+
+	<hr>
+{% endfor %}
+
+
+
+{% if user.is_authenticated %}
+
+<form action='/country/{{country.pk}}/' method='POST'>
+	
+{% csrf_token %}
+	
+{{form.as_p}}
+	
+<input type='submit' value='Add Review'>
+
+</form>
+
+{% endif %}
+
+
+{% endblock %}
+
+
+
+
+
